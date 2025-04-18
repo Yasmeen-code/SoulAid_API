@@ -13,21 +13,27 @@
         }
 
         .navbar {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* تغيير اللون الرئيسي للـ Navbar */
             color: white;
-            padding: 15px 0;
-            font-size: 18px;
+            padding: 12px 30px; /* تقليل padding لتقليص الحجم */
+            font-size: 16px;
+            border-bottom: 2px solid #388E3C; /* إضافة حدود تحت الـ navbar */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* تحسين تأثير الظل */
         }
 
         .navbar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 30px;
+            width: 100%;
         }
 
         .navbar-container span {
             font-weight: bold;
+            font-size: 20px;
         }
 
         .navbar-container img {
@@ -36,6 +42,11 @@
             border-radius: 50%;
             border: 2px solid white;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-container img:hover {
+            transform: scale(1.1); /* زيادة الحجم عند المرور فوق الصورة */
         }
 
         .dashboard-container {
@@ -48,10 +59,17 @@
         .search-bar {
             width: 80%;
             max-width: 600px;
-            padding: 10px;
-            border-radius: 4px;
+            padding: 12px 16px;
+            border-radius: 30px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #4CAF50; /* تغيير اللون عند التركيز */
         }
 
         .campaign-list {
@@ -65,35 +83,35 @@
         .campaign-card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
             transition: transform 0.3s ease;
+            cursor: pointer;
+            overflow: hidden; /* لإخفاء أي تجاوز في المحتوى */
         }
 
         .campaign-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* إضافة تأثير الظل عند المرور */
         }
 
         .campaign-card img {
             width: 100%;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
         }
-        .campaign-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
 
         .campaign-card h3 {
             color: #333;
             margin-top: 15px;
+            font-size: 18px;
         }
 
         .campaign-card p {
             color: #777;
+            font-size: 14px;
         }
 
         .error {
@@ -105,6 +123,7 @@
             text-align: center;
             font-size: 18px;
         }
+
     </style>
 </head>
 <body>
@@ -173,31 +192,30 @@
 
     // Function to display campaign cards
     function displayCampaigns(campaigns) {
-    const campaignList = document.getElementById('campaignList');
-    campaignList.innerHTML = '';
+        const campaignList = document.getElementById('campaignList');
+        campaignList.innerHTML = '';
 
-    campaigns.forEach(campaign => {
-        const card = document.createElement('div');
-        card.classList.add('campaign-card');
-        card.style.cursor = 'pointer';
+        campaigns.forEach(campaign => {
+            const card = document.createElement('div');
+            card.classList.add('campaign-card');
 
-        // حفظ بيانات الحملة عند الضغط
-        card.onclick = function () {
-            localStorage.setItem('selected_campaign', JSON.stringify(campaign));
-            window.location.href = 'campaign-details';
-        };
+            // حفظ بيانات الحملة عند الضغط
+            card.onclick = function () {
+                localStorage.setItem('selected_campaign', JSON.stringify(campaign));
+                window.location.href = 'campaign-details';
+            };
 
-        card.innerHTML = `
-            <img src="${campaign.Image || 'https://via.placeholder.com/300'}" alt="Campaign Image">
-            <h3>${campaign.CampName}</h3>
-            <p>${campaign.Description}</p>
-            <p><strong>Start Date:</strong> ${new Date(campaign.StartDate).toLocaleDateString()}</p>
-            <p><strong>End Date:</strong> ${new Date(campaign.EndDate).toLocaleDateString()}</p>
-        `;
+            card.innerHTML = `
+                <img src="${campaign.Image || 'https://via.placeholder.com/300'}" alt="Campaign Image">
+                <h3>${campaign.CampName}</h3>
+                <p>${campaign.Description}</p>
+                <p><strong>Start Date:</strong> ${new Date(campaign.StartDate).toLocaleDateString()}</p>
+                <p><strong>End Date:</strong> ${new Date(campaign.EndDate).toLocaleDateString()}</p>
+            `;
 
-        campaignList.appendChild(card);
-    });
-}
+            campaignList.appendChild(card);
+        });
+    }
 
     // Function to filter campaign cards by name
     function filterCampaigns() {

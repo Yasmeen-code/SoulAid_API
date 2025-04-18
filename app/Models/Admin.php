@@ -5,6 +5,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;  // تأكد من إضافة هذا الـ Trait
 
+
+
 class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory;  // إضافة الـ Trait هنا

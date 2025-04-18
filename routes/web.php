@@ -22,14 +22,28 @@ Route::get('/campaign-details', function () {
     return view('campaign-details');
 });
 
-Route::get('/admin-dashboard', function () {
-    return view('admin-dashboard');
-});
 
 Route::get('/login-admin', function () {
     return view('admin-login');
 });
+Route::get('/admin-dashboard', function () {
+    return view('admin-dashboard');
+});
+Route::get('/manage-users', function () {
+    return view('manage_users');
+});
+
+
+
+
 
 Route::get('/campaigns', function () {
     return view('campaigns');
+});
+
+
+
+
+Route::get('/test-users', function () {
+    return \App\Models\User::all();
 });

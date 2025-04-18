@@ -6,10 +6,29 @@ use App\Http\Controllers\API\CampaignController;
 use App\Http\Controllers\API\DonationController;
 use App\Http\Controllers\API\DonationTypeController;
 use App\Http\Controllers\API\RequestController;
+use App\Http\Controllers\API\AdminAuthController;
+use App\Http\Controllers\API\UserAuthController;
 
-// Public Routes
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+
+
+
+
+
+Route::prefix('user')->group(function () {
+    Route::post('login', [UserAuthController::class, 'login']);
+    Route::post('register', [UserAuthController::class, 'register']);
+    Route::middleware('auth:admin')->post('logout', [UserAuthController::class, 'logout']);
+});
+
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [AdminAuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AdminAuthController::class, 'logout']);
+        Route::get('/users', [AdminAuthController::class, 'getUsers']);
+    });
+});
+
 
 
    // Campaigns
@@ -20,7 +39,6 @@ Route::get('campaigns/{id}', [CampaignController::class, 'show']);
 
 // Protected Routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
     // Donation Type
     Route::get('donation-types', [DonationTypeController::class, 'index']);
     Route::post('donation-types', [DonationTypeController::class, 'store']);
