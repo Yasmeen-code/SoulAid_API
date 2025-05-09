@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -13,8 +13,8 @@ class UserAuthControllerTest extends TestCase
     public function test_user_can_register()
     {
         $userData = [
-            'name' => '12test user1234',
-            'email' => '12t3est_test56@gmail.com',
+            'name' => '1234test user1234',
+            'email' => '12t345est_test56@gmail.com',
             'password' => '123456789',
             'address' => 'hg kj l',
             'user_type' => 'Acceptor',  
