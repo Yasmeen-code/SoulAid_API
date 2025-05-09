@@ -6,13 +6,20 @@ use App\Models\Campaign;
 class CampaignFactory
 {
     public static function createCampaign($type, $data)
-    {
-        $validTypes = ['money', 'food', 'clothes', 'books', 'blood'];
-        if (!in_array($type, $validTypes)) {
-            throw new \Exception('Invalid campaign type');
-        }
-        return self::createGenericCampaign($data);
+{
+    $validTypes = ['money', 'food', 'clothes', 'books', 'blood'];
+
+    if (!in_array($type, [1, 2, 3, 4, 5])) {
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid campaign type'
+        ], 400);
     }
+
+    return self::createGenericCampaign($data);
+}
+
     
     private static function createGenericCampaign($data)
     {

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Manage Users</title>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Manage Users</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -128,8 +129,8 @@
         }
       })
       .then(response => response.json())
-      .then(handleFetchedData)  <!-- Refactored code to handle fetched data -->
-      .catch(handleError);  <!-- Refactored error handling -->
+      .then(handleFetchedData)
+      .catch(handleError);
     }
 
     // Handle fetched data and display users in table
@@ -139,7 +140,7 @@
       loading.style.display = 'none';
 
       if (data.status === 'success') {
-        displayUsers(data.data);  <!-- Refactored to separate displaying logic -->
+        displayUsers(data.data);
       } else {
         alert('Failed to fetch users: ' + data.message);
       }
@@ -147,49 +148,49 @@
 
     // Display users in the table
     function displayUsers(users) {
-      const userTableBody = document.getElementById('userTableBody');
-      const table = document.getElementById('userTable');
-      table.style.display = 'table';
-
-      users.forEach(user => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${user.Name}</td>
-          <td>${user.Email}</td>
-          <td>${user.UserType}</td>
-          <td>${user.UserId}</td>
-          <td>
-            <button class="action-btn" onclick="editUser(${user.UserId})">Edit</button>
-            <button class="action-btn delete-btn" onclick="deleteUser(${user.UserId})">Delete</button>
-          </td>
-        `;
-        userTableBody.appendChild(row);
-      });
+        const userTableBody = document.getElementById('userTableBody');
+        const table = document.getElementById('userTable');
+        table.style.display = 'table';
+        
+        if (!users || users.length === 0) {
+            userTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No users found</td></tr>';
+            return;
+        }
+        
+        userTableBody.innerHTML = ''; // Clear existing content
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${user.Name}</td>
+              <td>${user.Email}</td>
+              <td>${user.UserType}</td>
+              <td>${user.UserId}</td>
+              <td>
+                <button class="action-btn delete-btn" onclick="deleteUser(${user.UserId})">Delete</button>
+              </td>
+            `;
+            userTableBody.appendChild(row);
+        });
     }
 
-    // Error handling function
     function handleError(error) {
       document.getElementById('loading').innerText = 'Error loading users.';
       console.error('Error:', error);
     }
 
-    // Delete user by ID
-    function deleteUser(userId) {
-      if (confirm('Are you sure you want to delete this user?')) {
-        fetch(`http://localhost:8000/api/users/${userId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(handleDeleteResponse)  <!-- Refactored delete response handling -->
-        .catch(handleDeleteError);   <!-- Refactored delete error handling -->
-      }
+    function deleteUser(UserId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            fetch(`http://localhost:8000/api/admin/users/${UserId}`, {
+                method: 'DELETE',
+                headers: {
+                  Authorization: "Bearer " + token,
+                }
+            })
+            .then(response => response.json())
+            .then(handleDeleteResponse)
+            .catch(handleDeleteError);
+        }
     }
-
-    // Handle the response after deleting a user
     function handleDeleteResponse(data) {
       if (data.status === 'success') {
         alert('User deleted successfully.');
@@ -199,19 +200,12 @@
       }
     }
 
-    // Handle errors during delete process
     function handleDeleteError(error) {
       console.error('Delete Error:', error);
       alert('An error occurred while deleting the user.');
     }
 
-    // Redirect to the user edit page
-    function editUser(userId) {
-      window.location.href = `/edit-user.html?id=${userId}`;
-    }
-
-    // Initialize by fetching users
-    fetchUsers(); <!-- Refactored to call fetchUsers function for initial load -->
+    fetchUsers();
   </script>
 
 </body>

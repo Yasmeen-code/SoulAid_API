@@ -162,7 +162,7 @@
       formData.append('image', imageInput.files[0]);
     }
 
-    fetch('http://localhost:8000/api/register', {
+    fetch('http://localhost:8000/api/user/register', {
       method: 'POST',
       body: formData
     })

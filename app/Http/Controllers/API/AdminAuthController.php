@@ -8,11 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use App\Factories\UserFactory;
-use App\Factories\AdminFactory;
-use App\Http\Requests\AdminLoginRequest;
-
 
 class AdminAuthController extends Controller
 {
@@ -31,13 +26,10 @@ class AdminAuthController extends Controller
                 ], 422);
             }
 
-            // العثور على الـ Admin بناءً على البريد الإلكتروني
             $admin = Admin::where('Email', $request->email)->first();
 
-            // التحقق من كلمة المرور باستخدام Hash::check
             if ($admin && Hash::check($request->password, $admin->Password)) {
-                // إنشاء التوكن باستخدام Sanctum
-                $token = $admin->createToken('auth-token')->plainTextToken;
+                $token = $admin->createToken('auth-token', ['admin'])->plainTextToken;
 
                 return response()->json([
                     'status' => 'success',
@@ -74,24 +66,23 @@ class AdminAuthController extends Controller
             'message' => 'Logged out successfully'
         ]);
     }
-    
+
     public function getUsers(Request $request)
     {
         try {
             $admin = auth('admin')->user();
-    
+
             if (!$admin) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Unauthorized'
                 ], 403);
             }
-    
+
             $users = User::all();
-    
-            // سجل بيانات الـ users للتحقق من صحتها
-            Log::info('Fetched users:', $users->toArray()); 
-    
+
+            Log::info('Fetched users:', $users->toArray());
+
             return response()->json([
                 'status' => 'success',
                 'data' => $users
@@ -104,6 +95,24 @@ class AdminAuthController extends Controller
             ], 500);
         }
     }
-    
-    
+public function destroy($UserId)
+{
+    $user = User::find($UserId);
+
+    if (!$user) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'user not found.',
+        ], 404);
+    }
+
+    $user->delete();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'User deleted successfully.',
+    ]);
+}
+
+
 }

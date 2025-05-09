@@ -98,7 +98,7 @@
         <i class="fas fa-users"></i>
         Manage Users
       </div>      
-      <div class="card" onclick="alert('Manage Campaigns')">
+      <div class="card" onclick="window.location.href='manage-campaigns'">
         <i class="fas fa-bullhorn"></i>
         Manage Campaigns
       </div>
@@ -136,7 +136,7 @@
     // ✅ Logout function
     function logout() {
       localStorage.clear();
-      window.location.href = '/login';
+      window.location.href = '/login-admin';
     }
   </script>
 

@@ -31,4 +31,14 @@ class Campaign extends Model
         $this->StartDate = now(); 
         $this->Amount = 0; 
     }
+    public function feedbacks()
+{
+    return $this->hasMany(Feedback::class, 'campaign_id', 'Camp_Id');
+}
+
+public function getAverageRatingAttribute()
+{
+    return round($this->feedbacks()->avg('rating'), 1);
+}
+
 }

@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'Name' => 'Samir Rashad',
-               'Password' => Hash::make('password123'),
+                'Password' => Hash::make('password123'),
                 'Email' => 'samir.rashad@gmail.com',
                 'Address' => 'Sharm El-Sheikh, Egypt',
                 'Image' => 'vghjk.jpg',

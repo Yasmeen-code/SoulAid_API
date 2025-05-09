@@ -12,7 +12,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     .container {
@@ -71,6 +71,30 @@
     .cta-button:hover {
       background-color: #45a049;
     }
+
+    hr {
+      margin: 40px 0;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+
+    #feedbackList p {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -86,6 +110,27 @@
     </div>
 
     <button class="cta-button" onclick="alert('Support Campaign')">Support Campaign</button>
+
+    <!-- Feedback Section -->
+    <hr>
+    <h2>💬 User Feedback</h2>
+
+    <!-- Display existing feedback -->
+    <div id="feedbackList" style="text-align: left; margin-top: 20px;"></div>
+
+    <!-- Add new feedback -->
+    <div style="margin-top: 30px; text-align: left;">
+      <label for="username">Name:</label><br>
+      <input type="text" id="username" placeholder="Your name"><br>
+
+      <label for="rating">Rating (1-5):</label><br>
+      <input type="number" id="rating" min="1" max="5"><br>
+
+      <label for="comment">Comment:</label><br>
+      <textarea id="comment" rows="4" placeholder="Write your feedback..."></textarea><br>
+
+      <button class="cta-button" onclick="submitFeedback()">Submit Feedback</button>
+    </div>
   </div>
 
   <script>
@@ -101,6 +146,46 @@
     } else {
       document.querySelector('.container').innerHTML = '<p>Campaign not found.</p>';
     }
+
+    function loadFeedback() {
+      const feedbackList = JSON.parse(localStorage.getItem('campaign_feedback')) || [];
+      const currentCampId = campaign?.CampID || 'default';
+      const filtered = feedbackList.filter(fb => fb.campId === currentCampId);
+      
+      const container = document.getElementById('feedbackList');
+      container.innerHTML = filtered.length
+        ? filtered.map(f => `<p><strong>${f.name}</strong> ⭐${f.rating}<br>${f.comment}</p>`).join('')
+        : '<p>No feedback yet. Be the first to comment!</p>';
+    }
+
+    function submitFeedback() {
+      const name = document.getElementById('username').value.trim();
+      const rating = parseInt(document.getElementById('rating').value);
+      const comment = document.getElementById('comment').value.trim();
+      
+      if (!name || !comment || isNaN(rating) || rating < 1 || rating > 5) {
+        alert('Please fill all fields correctly.');
+        return;
+      }
+
+      const feedbackList = JSON.parse(localStorage.getItem('campaign_feedback')) || [];
+      feedbackList.push({
+        campId: campaign?.CampID || 'default',
+        name,
+        rating,
+        comment,
+        date: new Date().toISOString()
+      });
+
+      localStorage.setItem('campaign_feedback', JSON.stringify(feedbackList));
+      alert('Feedback submitted!');
+      document.getElementById('username').value = '';
+      document.getElementById('rating').value = '';
+      document.getElementById('comment').value = '';
+      loadFeedback();
+    }
+
+    loadFeedback();
   </script>
 
 </body>

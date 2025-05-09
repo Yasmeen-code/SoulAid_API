@@ -82,12 +82,13 @@ class UserAuthController extends Controller
             $factory = UserFactory::createFactory($request->user_type);
             $user = $factory->create($request->all());
 
+
             $token = $user->createToken('auth-token')->plainTextToken;
 
             return response()->json([
                 'status' => 'success',
                 'data' => [
-                    'id' => $user->id,
+                    'id' => $user->UserId,
                     'name' => $user->Name,
                     'email' => $user->Email,
                     'user_type' => $request->user_type
@@ -97,11 +98,13 @@ class UserAuthController extends Controller
 
         } catch (\Exception $e) {
             Log::error('User registration error: ' . $e->getMessage());
+            Log::error('Full Exception: ', ['exception' => $e]);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Registration failed'
+                'message' => $e->getMessage() 
             ], 500);
         }
+        
     }
 
     public function logout(Request $request)
@@ -114,4 +117,10 @@ class UserAuthController extends Controller
         ]);
     }
 
+
+
+    
 }
+
+
+

@@ -135,7 +135,6 @@
   document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    // إخفاء الرسائل القديمة وإظهار رسالة تحميل
     document.getElementById('loadingMessages').style.display = 'block';
     document.getElementById('errorMessages').textContent = '';
 
@@ -144,8 +143,6 @@
       email: formData.get('email'),
       password: formData.get('password')
     };
-
-    // إرسال بيانات تسجيل الدخول إلى الـ API
     fetch('http://localhost:8000/api/admin/login', {
 
       method: 'POST',
